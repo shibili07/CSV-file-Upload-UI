@@ -1,12 +1,24 @@
-import {Navbar}  from "../components/ui/layout/Navbar";
-function App() {
-  
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ImportBillingData from "../pages/ImportBillingData";
+import Home from "@/pages/Home";
+import { Navbar } from "@/components/ui/layout/Navbar";
+import { Footer } from "@/components/ui/layout/Footer";
+import { Box } from "@/components/ui/box/Box";
 
+export default function App() {
   return (
-    <>
-     <Navbar />
-    </>
-  )
-}
+    <BrowserRouter>
+      <Box background="white" className="min-h-screen flex flex-col">
+        <Navbar />
 
-export default App
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/imports" element={<ImportBillingData />} />
+
+        </Routes>
+
+        <Footer />
+      </Box>
+    </BrowserRouter>
+  );
+}

@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes } from "react";
+import { type ButtonHTMLAttributes, type ElementType } from "react";
 import { buttonVariants, type ButtonVariants } from "./button.variants";
 import { cn } from "@/utils/cn";
 
@@ -6,6 +6,7 @@ type ButtonProps =
   ButtonHTMLAttributes<HTMLButtonElement> &
   ButtonVariants & {
     loading?: boolean;
+    as?: ElementType;
   };
 
 export function Button({
@@ -16,15 +17,18 @@ export function Button({
   variant,
   size,
   fullWidth,
+  as,
   ...props
 }: ButtonProps) {
+  const Component = as || "button";
+
   return (
-    <button
+    <Component
       className={cn(buttonVariants({ variant, size, fullWidth }), className)}
       disabled={disabled || loading}
       {...props}
     >
       {loading ? "Loading..." : children}
-    </button>
+    </Component>
   );
 }
