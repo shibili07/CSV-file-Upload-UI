@@ -3,8 +3,20 @@ import { Stack } from "@/components/ui/stack/Stack";
 import { Text } from "@/components/ui/text/Text";
 import { Button } from "@/components/ui/button/Button";
 import { useState } from "react";
+import { parseCSV } from "@/utils/csvParser";
+import { toast } from "sonner";
 
-export function CSVUpload() {
+export interface UploadResult {
+    data: any[];
+    fileName: string;
+    headers: string[];
+}
+
+interface CSVUploadProps {
+    onUpload?: (result: UploadResult) => void;
+}
+
+export function CSVUpload({ onUpload }: CSVUploadProps) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -40,11 +52,28 @@ export function CSVUpload() {
         if (!selectedFile) return;
 
         setIsUploading(true);
-        // Simulate upload
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsUploading(false);
-        alert(`File "${selectedFile.name}" uploaded successfully!`);
-        setSelectedFile(null);
+        try {
+            const results = await parseCSV(selectedFile);
+            if (results.errors.length > 0) {
+                console.warn("CSV Parsing Errors:", results.errors);
+            }
+
+            // Simulate processing time
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            onUpload?.({
+                data: results.data,
+                fileName: selectedFile.name,
+                headers: results.meta.fields || []
+            });
+            toast.success("File parsed successfully!");
+            setSelectedFile(null);
+        } catch (error) {
+            console.error("Upload failed:", error);
+            toast.error("Failed to parse CSV file. Please check the format.");
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const formatFileSize = (bytes: number) => {
