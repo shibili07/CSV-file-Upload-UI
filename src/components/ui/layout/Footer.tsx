@@ -197,7 +197,7 @@ export function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-gray-800 mt-12 pt-8">
+                <div className="mt-12 pt-8">
                     <Stack
                         direction="horizontal"
                         justify="between"
