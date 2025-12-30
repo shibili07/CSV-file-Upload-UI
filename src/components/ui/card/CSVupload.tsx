@@ -36,15 +36,26 @@ export function CSVUpload({ onUpload }: CSVUploadProps) {
         setIsDragging(false);
 
         const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].name.endsWith(".csv")) {
-            setSelectedFile(files[0]);
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.name.toLowerCase().endsWith(".csv")) {
+                setSelectedFile(file);
+            } else {
+                toast.error("Please upload a CSV file only.");
+            }
         }
     };
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files && files.length > 0) {
-            setSelectedFile(files[0]);
+            const file = files[0];
+            if (file.name.toLowerCase().endsWith(".csv")) {
+                setSelectedFile(file);
+            } else {
+                toast.error("Please upload a CSV file only.");
+                e.target.value = ""; // Clear the input
+            }
         }
     };
 
